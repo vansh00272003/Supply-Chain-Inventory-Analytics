@@ -51,21 +51,37 @@ The dataset is synthetically generated using custom business logic script (`scri
 
 ---
 
-## 5. Power BI Dashboard Breakdown (7 Pages)
+## 5. Interactive Power BI Dashboard (7 Pages)
 
-```text
-  +-----------------------------------------------------------------------------------+
-  |                         POWER BI DASHBOARD PAGES SPECIFICATION                    |
-  +-----------------------------------------------------------------------------------+
-  | PAGE 1: Executive Overview       | High-level KPIs, revenue trends, stockout alerts|
-  | PAGE 2: Sales Analytics          | Monthly trends, store/dept revenue, AOV, tender |
-  | PAGE 3: Inventory Analytics      | Stock value, safety stock gaps, overstock matrix|
-  | PAGE 4: Supply Chain Analytics   | Vendor lead times, delay days, OTD % scorecard  |
-  | PAGE 5: Customer Analytics       | Demographic segments, city sales map, AOV trends|
-  | PAGE 6: Product Performance      | ABC Pareto analysis, price elasticity, bottom SKUs|
-  | PAGE 7: Returns Analytics        | Return reasons, refund costs, damaged item logs |
-  +-----------------------------------------------------------------------------------+
-```
+> **Live Report File:** [`Supply_Chain_Inventory_Analytics/powerbi/project anudip2.pbix`](Supply_Chain_Inventory_Analytics/powerbi/project%20anudip2.pbix) (or open via [`.pbip` Developer Project](Supply_Chain_Inventory_Analytics/powerbi/project%20anudip2.pbip)).
+
+### Page 1: Executive Overview
+*High-level executive KPIs, monthly revenue and profit trends, profit margins, inventory valuation, and department sales performance.*
+![Page 1: Executive Overview](Supply_Chain_Inventory_Analytics/images/Page%201.png)
+
+### Page 2: Sales Analytics
+*Revenue over time, sales by store matrix, payment method distribution, and order volume dynamics.*
+![Page 2: Sales Analytics](Supply_Chain_Inventory_Analytics/images/Page%202.png)
+
+### Page 3: Inventory Analytics
+*Stock on hand vs. available stock by store, departmental inventory valuation, stockout alerts, and safety stock monitoring.*
+![Page 3: Inventory Analytics](Supply_Chain_Inventory_Analytics/images/Page%203.png)
+
+### Page 4: Supply Chain Analytics
+*Procurement spend by supplier, vendor on-time delivery rates (OTD %), and lead time delay tracking.*
+![Page 4: Supply Chain Analytics](Supply_Chain_Inventory_Analytics/images/Page%204.png)
+
+### Page 5: Customer Analytics
+*Sales distribution across customer demographics, customer segments (Regular, Premium, Occasional), and city-level performance.*
+![Page 5: Customer Analytics](Supply_Chain_Inventory_Analytics/images/Page%205.png)
+
+### Page 6: Product Performance
+*Brand-level revenue comparison and detailed product catalog profitability (unit cost, selling price, total units sold).*
+![Page 6: Product Performance](Supply_Chain_Inventory_Analytics/images/Page%206.png)
+
+### Page 7: Returns Analytics
+*Return reasons analysis, refund amount impact across stores, and root causes (Damaged, Quality Issue, Customer Changed Mind, Expired).*
+![Page 7: Returns Analytics](Supply_Chain_Inventory_Analytics/images/Page%207.png)
 
 ---
 
@@ -75,7 +91,16 @@ The dataset is synthetically generated using custom business logic script (`scri
 Supply_Chain_Inventory_Analytics/
 │
 ├── data/
-│   └── walmart_style_supermarket_supply_chain_dataset.xlsx   # Styled 8-sheet Excel dataset
+│   └── walmart_style_supermarket_supply_chain_dataset.xlsx   # Styled 8-sheet Excel dataset (135k+ rows)
+│
+├── images/
+│   ├── Page 1.png                                             # Executive Overview Dashboard
+│   ├── Page 2.png                                             # Sales Analytics Dashboard
+│   ├── Page 3.png                                             # Inventory Analytics Dashboard
+│   ├── Page 4.png                                             # Supply Chain Analytics Dashboard
+│   ├── Page 5.png                                             # Customer Analytics Dashboard
+│   ├── Page 6.png                                             # Product Performance Dashboard
+│   └── Page 7.png                                             # Returns Analytics Dashboard
 │
 ├── sql/
 │   ├── create_tables.sql                                      # DDL schema script with PK/FK/Indexes
@@ -83,7 +108,12 @@ Supply_Chain_Inventory_Analytics/
 │   └── analysis_queries.sql                                   # 40 comprehensive analytical SQL queries
 │
 ├── powerbi/
-│   └── dashboard_documentation.md                             # Star-Schema, DAX measure suite, 7 pages layout
+│   ├── project anudip2.pbix                                   # Standalone interactive Power BI report
+│   ├── project anudip2.pbip                                   # Microsoft Power BI Project launcher
+│   ├── project anudip2.Report/                                # Power BI visual layout JSON definitions
+│   ├── project anudip2.SemanticModel/                         # Power BI TMDL data model & DAX definitions
+│   ├── DAX_AND_VISUAL_GUIDE.md                                # 28 DAX measures & visual building guide
+│   └── dashboard_documentation.md                             # Star-Schema & metric documentation
 │
 ├── documentation/
 │   ├── project_overview.md                                    # Architectural scope & business context
