@@ -1,0 +1,147 @@
+table Purchases
+	lineageTag: c8a3e95f-1caf-4a83-84b3-fa89534129bf
+
+	measure 'Total PO Count' = DISTINCTCOUNT(Purchases[PO_ID])
+		formatString: 0
+		lineageTag: a94a3518-8f20-4378-ad63-6b8f90baf5d6
+
+	column PO_ID
+		dataType: string
+		lineageTag: fbfaacc6-0c92-4ba1-9c3a-4efc707e8162
+		summarizeBy: none
+		sourceColumn: PO_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6a0020b0-8acc-4cc4-9232-ffe84950da9e
+		summarizeBy: none
+		sourceColumn: Order_Date
+
+		variation Variation
+			isDefault
+			relationship: 48137d8e-64a0-4cc4-a726-e33d5026f049
+			defaultHierarchy: LocalDateTable_44281a72-29ef-419c-a827-712a9518b47e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Product_ID
+		dataType: string
+		lineageTag: 9b13ca2d-a203-4b10-bb3d-d51bb84b4cd3
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Supplier_ID
+		dataType: string
+		lineageTag: 0107de41-ef80-4d36-9b4b-5c31a1a347ee
+		summarizeBy: none
+		sourceColumn: Supplier_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_ID
+		dataType: string
+		lineageTag: ce389966-19eb-4162-b0b6-f9633f620f0e
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Expected_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: de1333e1-6f8b-4eff-a288-28f5238622b1
+		summarizeBy: none
+		sourceColumn: Expected_Date
+
+		variation Variation
+			isDefault
+			relationship: 60280af2-13a8-4d6e-82f2-b0f839167afe
+			defaultHierarchy: LocalDateTable_54ca7a43-2e4a-4838-a358-2e9eb598d2d4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Received_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a90f4295-4920-4893-9779-a5ab8f16e390
+		summarizeBy: none
+		sourceColumn: Received_Date
+
+		variation Variation
+			isDefault
+			relationship: c347e3a9-7242-4bc2-8163-7d6f07a71713
+			defaultHierarchy: LocalDateTable_3e20de3d-105f-495e-a766-0a950704ee9e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Quantity_Ordered
+		dataType: int64
+		formatString: 0
+		lineageTag: 68a915c9-0719-4249-b8af-bc995b582883
+		summarizeBy: sum
+		sourceColumn: Quantity_Ordered
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purchase_Cost
+		dataType: double
+		lineageTag: 98e81def-0d6d-4707-b926-7c098b573659
+		summarizeBy: sum
+		sourceColumn: Purchase_Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Lead_Time_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: c18ac926-4258-4232-9c1c-32fa73eff28e
+		summarizeBy: sum
+		sourceColumn: Lead_Time_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column Delay_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: f52e0dab-2858-47d5-9b06-d346b14ee662
+		summarizeBy: sum
+		sourceColumn: Delay_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column On_Time
+		dataType: string
+		lineageTag: a5c8b765-2e23-49be-88d9-b36f085d1599
+		summarizeBy: none
+		sourceColumn: On_Time
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Purchases = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Purchases_Sheet = Source{[Item="Purchases",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Purchases_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"PO_ID", type text}, {"Order_Date", type date}, {"Product_ID", type text}, {"Supplier_ID", type text}, {"Store_ID", type text}, {"Expected_Date", type date}, {"Received_Date", type date}, {"Quantity_Ordered", Int64.Type}, {"Purchase_Cost", type number}, {"Lead_Time_Days", Int64.Type}, {"Delay_Days", Int64.Type}, {"On_Time", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

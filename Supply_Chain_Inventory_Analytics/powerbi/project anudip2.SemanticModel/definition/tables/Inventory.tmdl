@@ -1,0 +1,106 @@
+table Inventory
+	lineageTag: 4165151d-6b21-416c-940e-1a337dda8a3c
+
+	measure 'Inventory Value' = SUMX(Inventory, Inventory[Stock_On_Hand] * LOOKUPVALUE(Products[Unit_Cost], Products[Product_ID], Inventory[Product_ID]))
+		lineageTag: 95eeb3ee-26e4-49b6-bf3c-43d9e72fca00
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Stockout Count' = CALCULATE(COUNTROWS(Inventory), Inventory[Stock_On_Hand] = 0)
+		formatString: 0
+		lineageTag: 3fc5645b-7849-41c5-b242-37e46ccebe07
+
+	measure 'Low Stock Count' = CALCULATE(COUNTROWS(Inventory), FILTER(Inventory, Inventory[Stock_On_Hand] < LOOKUPVALUE(Products[Reorder_Level], Products[Product_ID], Inventory[Product_ID])))
+		formatString: 0
+		lineageTag: 705e2ca2-7174-44b5-98ae-a518fdc5318d
+
+	measure 'Critical Stock Count' = CALCULATE(COUNTROWS(Inventory), FILTER(Inventory, Inventory[Stock_On_Hand] < LOOKUPVALUE(Products[Safety_Stock], Products[Product_ID], Inventory[Product_ID])))
+		formatString: 0
+		lineageTag: 01e4c622-2598-45e3-831c-7ae895edee83
+
+	measure 'Overstock Count' = CALCULATE(COUNTROWS(Inventory), FILTER(Inventory, Inventory[Stock_On_Hand] > (3 * LOOKUPVALUE(Products[Reorder_Level], Products[Product_ID], Inventory[Product_ID]))))
+		formatString: 0
+		lineageTag: 8bd31250-0721-49b7-857a-f41894f58406
+
+	column Inventory_ID
+		dataType: string
+		lineageTag: 243fa635-deb6-419c-98c6-e028f8e031be
+		summarizeBy: none
+		sourceColumn: Inventory_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Inventory_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: dea09629-e2b7-471a-859b-09c5fdcc1247
+		summarizeBy: none
+		sourceColumn: Inventory_Date
+
+		variation Variation
+			isDefault
+			relationship: 87e379b6-cf87-4853-a6af-c9df5cdca886
+			defaultHierarchy: LocalDateTable_dc75913c-9426-4340-b44f-4f0336f11d77.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Product_ID
+		dataType: string
+		lineageTag: eb4c618c-3c44-4221-9028-4631e49b3b24
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_ID
+		dataType: string
+		lineageTag: c3f361a8-c6f1-4180-997b-852bf8ea7e39
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Stock_On_Hand
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e30ff48-c299-4617-8a15-4038ff517808
+		summarizeBy: sum
+		sourceColumn: Stock_On_Hand
+
+		annotation SummarizationSetBy = Automatic
+
+	column Reserved_Stock
+		dataType: int64
+		formatString: 0
+		lineageTag: 38e30297-44e8-4537-b19a-2ad3f961c037
+		summarizeBy: sum
+		sourceColumn: Reserved_Stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column Available_Stock
+		dataType: int64
+		formatString: 0
+		lineageTag: 74a37bd3-76a5-417c-bd7a-0f14672abeca
+		summarizeBy: sum
+		sourceColumn: Available_Stock
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Inventory = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Inventory_Sheet = Source{[Item="Inventory",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Inventory_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Inventory_ID", type text}, {"Inventory_Date", type date}, {"Product_ID", type text}, {"Store_ID", type text}, {"Stock_On_Hand", Int64.Type}, {"Reserved_Stock", Int64.Type}, {"Available_Stock", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

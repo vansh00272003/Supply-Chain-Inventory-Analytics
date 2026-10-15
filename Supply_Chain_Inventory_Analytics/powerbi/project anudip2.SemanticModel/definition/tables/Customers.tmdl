@@ -1,0 +1,59 @@
+table Customers
+	lineageTag: 1c5ecdcc-38a0-4ff6-9099-5fa3d333e06c
+
+	column Customer_ID
+		dataType: string
+		lineageTag: f0e108ec-9d49-4f0f-af25-6c94d1b75626
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 4f4f1b3d-78fc-496d-846f-160c7bc74fb2
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age_Group
+		dataType: string
+		lineageTag: a4982b05-e8a6-4b98-8c66-6fc61db8d201
+		summarizeBy: none
+		sourceColumn: Age_Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 1f9e8a3a-a886-4d0a-a191-f1956e80eb34
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer_Segment
+		dataType: string
+		lineageTag: 54cf8028-24ce-4781-9c3d-bdb9688232ff
+		summarizeBy: none
+		sourceColumn: Customer_Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Customers_Sheet = Source{[Item="Customers",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Customers_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Customer_ID", type text}, {"City", type text}, {"Age_Group", type text}, {"Gender", type text}, {"Customer_Segment", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

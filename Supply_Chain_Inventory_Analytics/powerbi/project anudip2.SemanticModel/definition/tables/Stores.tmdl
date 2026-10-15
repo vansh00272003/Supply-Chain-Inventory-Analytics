@@ -1,0 +1,67 @@
+table Stores
+	lineageTag: 0b2ecbeb-d34d-40b0-a2f1-9bf163930afa
+
+	column Store_ID
+		dataType: string
+		lineageTag: 8a73bab5-197e-4b05-8ffb-2563f1c5c48d
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_Name
+		dataType: string
+		lineageTag: f38aaea1-3478-441e-bea3-b9d04f437e5c
+		summarizeBy: none
+		sourceColumn: Store_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 977ad021-fe4f-48fb-87e6-8980d59437fd
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: ce19c144-830d-4a3b-bae4-3e382bc2f967
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 94311122-f50c-49ed-9db1-e265d3b2b101
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Capacity_Units
+		dataType: int64
+		formatString: 0
+		lineageTag: 38f931dd-96f1-4af3-bd72-c70cd7ee0adf
+		summarizeBy: sum
+		sourceColumn: Capacity_Units
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Stores = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Stores_Sheet = Source{[Item="Stores",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Stores_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Store_ID", type text}, {"Store_Name", type text}, {"City", type text}, {"State", type text}, {"Region", type text}, {"Capacity_Units", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

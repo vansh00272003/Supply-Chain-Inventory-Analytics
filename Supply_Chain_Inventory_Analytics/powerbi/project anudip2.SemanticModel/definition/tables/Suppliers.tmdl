@@ -1,0 +1,88 @@
+table Suppliers
+	lineageTag: 4b7eff0c-3d09-40e0-80e1-cf0d448193bb
+
+	measure 'Total Purchase Cost' = SUM(Purchases[Purchase_Cost])
+		lineageTag: 6f5fb034-3eb3-4a76-9631-660eba881747
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Lead Time' = AVERAGE(Purchases[Lead_Time_Days])
+		lineageTag: f61e7a11-179e-42d2-b2e5-54e46505b836
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'On Time Delivery %' = DIVIDE(CALCULATE(COUNTROWS(Purchases), Purchases[On_Time] = "Yes"), COUNTROWS(Purchases), 0)
+		lineageTag: 912ad045-805e-4c68-a138-830021464ba9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Delayed PO Count' = CALCULATE(COUNTROWS(Purchases), Purchases[On_Time] = "No")
+		formatString: 0
+		lineageTag: c7435e33-506a-4fe8-b082-6c7b1a7e27de
+
+	column Supplier_ID
+		dataType: string
+		lineageTag: 823fd78e-e07b-434a-9f84-7dae36ef8401
+		summarizeBy: none
+		sourceColumn: Supplier_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Supplier_Name
+		dataType: string
+		lineageTag: 2956f6b1-ba49-41bd-8e8f-225cdcc828e1
+		summarizeBy: none
+		sourceColumn: Supplier_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: ec164096-a2d4-42b9-9a50-b23224dc3c43
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 8ceff069-54a0-4b73-9a16-c5c72a317e41
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Standard_Lead_Time_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: 09d444c2-b615-4768-8555-3fe55edee8fb
+		summarizeBy: none
+		sourceColumn: Standard_Lead_Time_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column Supplier_Rating
+		dataType: double
+		lineageTag: 55f1ff14-3d9c-4173-a5e4-d8235623001a
+		summarizeBy: none
+		sourceColumn: Supplier_Rating
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Suppliers = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Suppliers_Sheet = Source{[Item="Suppliers",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Suppliers_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Supplier_ID", type text}, {"Supplier_Name", type text}, {"City", type text}, {"State", type text}, {"Standard_Lead_Time_Days", Int64.Type}, {"Supplier_Rating", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

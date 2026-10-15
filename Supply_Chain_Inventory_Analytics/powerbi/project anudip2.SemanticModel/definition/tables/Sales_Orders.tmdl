@@ -1,0 +1,171 @@
+table Sales_Orders
+	lineageTag: 890f03b8-8a4c-4593-b376-17e83ba2ee24
+
+	measure 'Total Sales' = SUM(Sales_Orders[Sales_Amount])
+		lineageTag: 43cf5519-bd9b-4d1a-9668-1fb131f43934
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total COGS' = SUM(Sales_Orders[COGS])
+		lineageTag: 6260555f-fac9-45e3-b253-a8c3f4414938
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Profit' = [Total Sales] - [Total COGS]
+		lineageTag: 7467b3be-e271-4651-8b33-9b6300f7947f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Profit Margin %' = DIVIDE([Gross Profit], [Total Sales], 0)
+		lineageTag: 8ada6b4a-54bb-4394-940d-ec8e5efe8974
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Orders' = DISTINCTCOUNT(Sales_Orders[Order_ID])
+		formatString: 0
+		lineageTag: d4d29eed-2638-4206-9273-f1df80ac44b7
+
+	measure 'Units Sold' = SUM(Sales_Orders[Quantity])
+		formatString: 0
+		lineageTag: 1cf42f8e-fea2-4862-9f44-bb61d7425491
+
+	measure 'Average Order Value' = DIVIDE([Total Sales], [Total Orders], 0)
+		lineageTag: 4dcb4b6b-3b96-4253-b897-3e5fed52a969
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Discount %' = AVERAGE(Sales_Orders[Discount_Pct])
+		lineageTag: 18b46153-8d87-4c3f-bc29-45746f9eb6e7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Order_ID
+		dataType: string
+		lineageTag: 7cd46c49-d409-4311-b4ab-2dba824bc466
+		summarizeBy: none
+		sourceColumn: Order_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fd8f1bda-6442-4194-a237-a7f48f2784a2
+		summarizeBy: none
+		sourceColumn: Order_Date
+
+		variation Variation
+			isDefault
+			relationship: 8c11a7d4-04a7-479d-961e-3ee0b8828b39
+			defaultHierarchy: LocalDateTable_f8e14736-ef5d-48ae-8712-94dddcb828cd.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 84d32627-3ecb-4712-b6d0-305829a293a2
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_ID
+		dataType: string
+		lineageTag: 7f74e186-84f4-4618-b41f-a1a967adf4f3
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_ID
+		dataType: string
+		lineageTag: 1554c09d-683f-423f-acd3-c648b441c3e4
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: eda8d013-c950-457d-8dd6-91e586b06731
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column Discount_Pct
+		dataType: double
+		lineageTag: 7e1152b1-e83d-4b10-8ce4-aed53a14a4be
+		summarizeBy: sum
+		sourceColumn: Discount_Pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Sales_Amount
+		dataType: double
+		lineageTag: 5db387bb-ff19-4669-b131-e79e9032ba42
+		summarizeBy: sum
+		sourceColumn: Sales_Amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Payment_Method
+		dataType: string
+		lineageTag: d1896a22-dfba-41aa-819c-93b8ca853d47
+		summarizeBy: none
+		sourceColumn: Payment_Method
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit_Selling_Price
+		dataType: double
+		lineageTag: c2edc2b4-5907-4aa2-a767-4f77db7a536e
+		summarizeBy: sum
+		sourceColumn: Unit_Selling_Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column COGS
+		dataType: double
+		lineageTag: 2396cf4a-711f-435b-9c2a-f45574114084
+		summarizeBy: sum
+		sourceColumn: COGS
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Gross_Profit
+		dataType: double
+		lineageTag: e96a9b8e-9660-40bd-8705-084f4bf831df
+		summarizeBy: sum
+		sourceColumn: Gross_Profit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Sales_Orders = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Sales_Orders_Sheet = Source{[Item="Sales_Orders",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sales_Orders_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Order_ID", type text}, {"Order_Date", type date}, {"Customer_ID", type text}, {"Product_ID", type text}, {"Store_ID", type text}, {"Quantity", Int64.Type}, {"Discount_Pct", type number}, {"Sales_Amount", type number}, {"Payment_Method", type text}, {"Unit_Selling_Price", type number}, {"COGS", type number}, {"Gross_Profit", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,77 @@
+relationship 8c11a7d4-04a7-479d-961e-3ee0b8828b39
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Sales_Orders.Order_Date
+	toColumn: LocalDateTable_f8e14736-ef5d-48ae-8712-94dddcb828cd.Date
+
+relationship 87213973-b9d8-458e-82a1-2e92e3a0a77c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Returns.Return_Date
+	toColumn: LocalDateTable_fb2582eb-a5c9-48fe-8ca1-20a16317054b.Date
+
+relationship 48137d8e-64a0-4cc4-a726-e33d5026f049
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Purchases.Order_Date
+	toColumn: LocalDateTable_44281a72-29ef-419c-a827-712a9518b47e.Date
+
+relationship 60280af2-13a8-4d6e-82f2-b0f839167afe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Purchases.Expected_Date
+	toColumn: LocalDateTable_54ca7a43-2e4a-4838-a358-2e9eb598d2d4.Date
+
+relationship c347e3a9-7242-4bc2-8163-7d6f07a71713
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Purchases.Received_Date
+	toColumn: LocalDateTable_3e20de3d-105f-495e-a766-0a950704ee9e.Date
+
+relationship 87e379b6-cf87-4853-a6af-c9df5cdca886
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Inventory.Inventory_Date
+	toColumn: LocalDateTable_dc75913c-9426-4340-b44f-4f0336f11d77.Date
+
+relationship AutoDetected_ea3f645e-e610-4067-b9d6-afe2fce5a5fd
+	fromColumn: Purchases.Supplier_ID
+	toColumn: Suppliers.Supplier_ID
+
+relationship AutoDetected_d9b7529f-44e4-4ccb-93e3-766e249a3e5e
+	fromColumn: Sales_Orders.Store_ID
+	toColumn: Stores.Store_ID
+
+relationship AutoDetected_ab9b037f-4d05-45a1-a9a8-0b5f985f7e4a
+	fromColumn: Returns.Store_ID
+	toColumn: Stores.Store_ID
+
+relationship AutoDetected_70aa0d5f-1586-4b2a-93e6-5e1fdec52d69
+	fromColumn: Purchases.Store_ID
+	toColumn: Stores.Store_ID
+
+relationship AutoDetected_d2b17645-d33e-451c-9caf-9d32dd71fb39
+	fromColumn: Inventory.Store_ID
+	toColumn: Stores.Store_ID
+
+relationship AutoDetected_8c402238-231a-425b-9b44-d97117930574
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Returns.Order_ID
+	toColumn: Sales_Orders.Order_ID
+
+relationship AutoDetected_1d54de17-7e59-43ff-bc00-a6e6e13745b4
+	fromColumn: Sales_Orders.Customer_ID
+	toColumn: Customers.Customer_ID
+
+relationship AutoDetected_09ca70fe-8e48-4606-8377-822616888ff2
+	fromColumn: Sales_Orders.Product_ID
+	toColumn: Products.Product_ID
+
+relationship AutoDetected_3201cd59-35a1-48db-97bb-bbfa7ebfdc0e
+	fromColumn: Returns.Product_ID
+	toColumn: Products.Product_ID
+
+relationship AutoDetected_a0eb9d10-1968-4aec-9d44-729bb4f87afc
+	fromColumn: Purchases.Product_ID
+	toColumn: Products.Product_ID
+
+relationship AutoDetected_e7927e8c-3b8f-4416-a005-23249d77b276
+	fromColumn: Inventory.Product_ID
+	toColumn: Products.Product_ID
+

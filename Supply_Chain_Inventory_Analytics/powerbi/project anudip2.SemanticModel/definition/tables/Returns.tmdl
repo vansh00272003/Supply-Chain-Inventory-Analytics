@@ -1,0 +1,107 @@
+table Returns
+	lineageTag: 853f1675-941f-42ba-a53f-50839e824c41
+
+	measure 'Returned Units' = SUM(Returns[Quantity_Returned])
+		formatString: 0
+		lineageTag: 9009739b-6b90-42a2-86b1-dd528eefce36
+
+	measure 'Total Refund Amount' = SUM(Returns[Refund_Amount])
+		lineageTag: 7c4e55aa-d90e-477f-bece-1e44a0d64dfa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Return Rate %' = DIVIDE([Returned Units], [Units Sold], 0)
+		lineageTag: d6f76134-b827-4849-9e99-09dde8603528
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Return_ID
+		dataType: string
+		lineageTag: ed906467-c36b-4b5c-bc94-a161904d96f6
+		summarizeBy: none
+		sourceColumn: Return_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order_ID
+		dataType: string
+		lineageTag: 0d1d8928-ee15-40ab-8253-f478da98936b
+		summarizeBy: none
+		sourceColumn: Order_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Return_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0220f188-12cb-4d08-9d12-37d242d07d3e
+		summarizeBy: none
+		sourceColumn: Return_Date
+
+		variation Variation
+			isDefault
+			relationship: 87213973-b9d8-458e-82a1-2e92e3a0a77c
+			defaultHierarchy: LocalDateTable_fb2582eb-a5c9-48fe-8ca1-20a16317054b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Product_ID
+		dataType: string
+		lineageTag: 317c8d5c-dd22-4d2c-9e3b-6441da5427b7
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_ID
+		dataType: string
+		lineageTag: 91da81f0-dc8b-4754-905f-b2cc042d9974
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity_Returned
+		dataType: int64
+		formatString: 0
+		lineageTag: 6518afe5-9c3a-48db-bcfe-654de411688e
+		summarizeBy: sum
+		sourceColumn: Quantity_Returned
+
+		annotation SummarizationSetBy = Automatic
+
+	column Refund_Amount
+		dataType: double
+		lineageTag: 6f27194c-a3d1-4432-8c7e-a5da68668323
+		summarizeBy: sum
+		sourceColumn: Refund_Amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Return_Reason
+		dataType: string
+		lineageTag: 7e3357a3-d1f4-4158-ab2b-303a35e8820b
+		summarizeBy: none
+		sourceColumn: Return_Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Returns = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Returns_Sheet = Source{[Item="Returns",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Returns_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Return_ID", type text}, {"Order_ID", type text}, {"Return_Date", type date}, {"Product_ID", type text}, {"Store_ID", type text}, {"Quantity_Returned", Int64.Type}, {"Refund_Amount", type number}, {"Return_Reason", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

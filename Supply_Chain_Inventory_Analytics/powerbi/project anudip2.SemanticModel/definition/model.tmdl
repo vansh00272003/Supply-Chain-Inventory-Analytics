@@ -1,0 +1,33 @@
+model Model
+	culture: en-IN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Suppliers","Stores","Sales_Orders","Returns","Purchases","Products","Customers","Inventory"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Suppliers
+ref table Stores
+ref table Sales_Orders
+ref table DateTableTemplate_eb5dc52f-c080-43ce-b22c-8e595781132b
+ref table LocalDateTable_f8e14736-ef5d-48ae-8712-94dddcb828cd
+ref table Returns
+ref table LocalDateTable_fb2582eb-a5c9-48fe-8ca1-20a16317054b
+ref table Purchases
+ref table LocalDateTable_44281a72-29ef-419c-a827-712a9518b47e
+ref table LocalDateTable_54ca7a43-2e4a-4838-a358-2e9eb598d2d4
+ref table LocalDateTable_3e20de3d-105f-495e-a766-0a950704ee9e
+ref table Products
+ref table Customers
+ref table Inventory
+ref table LocalDateTable_dc75913c-9426-4340-b44f-4f0336f11d77
+
+ref cultureInfo en-IN
+

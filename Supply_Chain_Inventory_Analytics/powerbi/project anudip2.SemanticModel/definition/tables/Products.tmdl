@@ -1,0 +1,105 @@
+table Products
+	lineageTag: 5743c72b-d625-400a-a2fb-125eecfdc21f
+
+	column Product_ID
+		dataType: string
+		lineageTag: b1249303-0b73-482c-8d68-869125d23eba
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_Name
+		dataType: string
+		lineageTag: 962848c2-725d-4405-b048-626167e872e0
+		summarizeBy: none
+		sourceColumn: Product_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 9b6672bc-af76-4b80-8a90-168061f0fd85
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategory
+		dataType: string
+		lineageTag: 1921145c-f854-4e80-bb99-3342ac87474c
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: 34d8adba-9aa7-464a-ad58-3d948f2c1c2c
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit_Cost
+		dataType: double
+		lineageTag: 199f4b3f-5c92-4174-adf5-92e3d9b91f3d
+		summarizeBy: sum
+		sourceColumn: Unit_Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Selling_Price
+		dataType: double
+		lineageTag: 56c1e1b2-367d-4e2a-8089-f9b8568cb657
+		summarizeBy: sum
+		sourceColumn: Selling_Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Reorder_Level
+		dataType: int64
+		formatString: 0
+		lineageTag: afa53a43-07d5-4ffb-acc8-9ce35a7ccadd
+		summarizeBy: sum
+		sourceColumn: Reorder_Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column Safety_Stock
+		dataType: int64
+		formatString: 0
+		lineageTag: b0da6375-9ba3-4a39-85e1-35a30aae42e5
+		summarizeBy: sum
+		sourceColumn: Safety_Stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column Shelf_Life_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: 3622cb2a-ac1e-42b7-954a-a6507b9b5cb3
+		summarizeBy: sum
+		sourceColumn: Shelf_Life_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("E:\projects\Supply chain managment\Supply_Chain_Inventory_Analytics\data\walmart_style_supermarket_supply_chain_dataset.xlsx"), null, true),
+				    Products_Sheet = Source{[Item="Products",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Products_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Product_ID", type text}, {"Product_Name", type text}, {"Department", type text}, {"Subcategory", type text}, {"Brand", type text}, {"Unit_Cost", type number}, {"Selling_Price", type number}, {"Reorder_Level", Int64.Type}, {"Safety_Stock", Int64.Type}, {"Shelf_Life_Days", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
